@@ -1,0 +1,67 @@
+{% extends "pattern.html" %}
+{% block title %}
+Список
+{% endblock %}
+
+{% macro render_list_spec(list, selected_id) %}
+            <select name="name_spec">
+                {% set n = len(list) %}
+                {% for i in range(n) %}
+                    {% set id_s = list.loc[i, "id_specialization"] %}
+                    {% if id_s == selected_id %}
+                        <option selected value={{id_s}}>
+                    {% else %}
+                        <option value="{{id_s}}">
+                    {% endif %}
+                    {{list.loc[i, "name_specialization"]}}
+                    </option>
+                {% endfor %}
+            </select>
+        {% endmacro %}
+
+{% block navbar %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+                <a class="nav-link active" href={{url_for('index')}}> Расписание по дням </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{url_for('appointment')}}"> Расписание по врачам </a>
+            </li>
+<!--            <li>-->
+<!--                <a class="nav-link" href="{{url_for('index')}}"> Подтвердить выбор специалиста </a>-->
+<!--            </li>-->
+            <li>
+                <a class="nav-link" href="{{url_for('info_user')}}"> Пользователь </a>
+            </li>
+        </ul>
+    </div>
+</nav>
+{% endblock %}
+
+
+{% block content %}
+<div class="block">
+    <p>
+        <form action="{{url_for("index")}}" method="get">
+            <input type="submit" value="Назад">
+        </form>
+    </p>
+    <p>
+        <form action="{{url_for("user_add")}}" method ="post">
+            <p>Имя: <input name="user_name" type="text" value={{us_name}}></p>
+            <p>Фамилия: <input name="user_last_name" type="text" value={{us_last}}></p>
+            <p>Отчество*: <input name="user_surname" type="text" value={{us_sur}}></p>
+            <p>Почта: <input name="user_mail" type="text" value={{us_mail}}></p>
+            <p>Телефон: <input name="user_phone" type="text" value={{us_phon}}></p>
+            <input type="submit" value="Добавить" name="insert_user">
+            <p>*если нет отчества, то оставьте поле пустым</p>
+        </form>
+    </p>
+    <p>{{output_results}}</p>
+</div>
+{% endblock %}
+
+{% block script %}
+{% endblock %}

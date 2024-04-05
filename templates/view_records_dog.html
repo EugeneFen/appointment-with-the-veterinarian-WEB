@@ -1,0 +1,89 @@
+{% extends "pattern.html" %}
+{% block title %}
+Список
+{% endblock %}
+
+{% macro render_table(table_name, relation) %}
+            {% if len(relation) != 0 %}
+            <div class="table">
+                <p>
+                    <b>{{table_name}}</b>
+                </p>
+                {% set n = len(relation) %}
+                <table>
+                    <thead>
+                        <tr>
+                            {% for name in relation.dtypes.index %}
+                                <th>{{name}}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in range(n) %}
+                        <tr>
+                            {% for name in relation.dtypes.index %}
+                                    <td>
+                                        {{relation.loc[i, name]}}
+                                    </td>
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p>
+                Записей нет.
+            </p>
+            {% endif %}
+        {% endmacro %}
+
+{% block navbar %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+                <a class="nav-link" href={{url_for('index')}}> Расписание по дням </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{url_for('index')}}"> Расписание по врачам </a>
+            </li>
+<!--            <li>-->
+<!--                <a class="nav-link" href="{{url_for('index')}}"> Подтвердить выбор специалиста </a>-->
+<!--            </li>-->
+            <li>
+                <a class="nav-link" href="{{url_for('info_user')}}"> Пользователь </a>
+            </li>
+        </ul>
+    </div>
+</nav>
+{% endblock %}
+
+
+{% block content %}
+<div class="block">
+    <p>
+        <form action="{{url_for("index")}}" method="get">
+            <input type="submit" value="Назад">
+        </form>
+    </p>
+    <p>
+        <form>
+            <p>
+                Пользователь:
+                <p>{{user_name}}</p>
+            </p>
+            <p>
+                Собака:
+                <p>{{dog_name}}</p>
+            </p>
+        </form>
+    </p>
+    <form action="{{url_for("index")}}" method="get">
+        {{ render_table("Все записи", select_time) }}
+    </form>
+</div>
+{% endblock %}
+
+{% block script %}
+{% endblock %}

@@ -1,0 +1,25 @@
+<form action="{{ url_for('appointment') }}" method="get">
+<p>
+ Список пользователей:
+ <select name=list_users>
+ {% for i in range(len(users_list)) %}
+ <option value="{{users_list[i][0]}}">{{users_list[i][1]}}</option>
+ {% endfor %}
+ </select>
+</p>
+
+<table border="1">
+   <caption>Таблица</caption>
+   <tr>
+    <th>ДеНь </th>
+    <th>ВраЧь </th>
+    <th>Время</th>
+   </tr>
+</table>
+
+<select name=apoint_doctor>
+ {% for i in range(len(day_list)) %}
+    <option value="{{day_list[i][0]}}  {{day_list[i][1]}}  {{day_list[i][2]}}">{{day_list[i][0]}}  {{day_list[i][1]}}  {{day_list[i][2]}}</option>
+ {% endfor %}
+    <p><input type=submit value=Выбрать></p>
+</select></form>

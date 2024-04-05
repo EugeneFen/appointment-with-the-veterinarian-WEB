@@ -1,0 +1,153 @@
+{% extends "pattern.html" %}
+{% block title %}
+Список
+{% endblock %}
+
+{% macro render_table(table_name, relation) %}
+            {% if len(relation) != 0 %}
+            <div class="table">
+                <p>
+                    <b>{{table_name}}</b>
+                </p>
+                {% set n = len(relation) %}
+                <table>
+                    <thead>
+                        <tr>
+                            {% for name in relation.dtypes.index %}
+                                <th>{{name}}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in range(n) %}
+                        <tr>
+                            {% for name in relation.dtypes.index %}
+                                {% if name == "Запись" %}
+                                    <td><button type="submit" name="return_equipment" value={{relation.loc[i,"Запись"]}}>Записаться</button></td>
+                                {% else %}
+                                    <td>
+                                        {{relation.loc[i, name]}}
+                                    </td>
+                                {% endif %}
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p>
+                Этот специалист не принимает.
+            </p>
+            {% endif %}
+        {% endmacro %}
+
+        {% macro render_select_us(list, selected_id) %}
+            <select name="users">
+                {% set n = len(list) %}
+                {% for i in range(n) %}
+                    {% set id_u = list.loc[i, "id_dog_owner"] %}
+                    {% if id_u == selected_id %}
+                        <option selected value={{id_u}}>
+                    {% else %}
+                        <option value="{{id_u}}">
+                    {% endif %}
+                    {{list.loc[i, "FIO"]}}</option>
+                {% endfor %}
+            </select>
+        {% endmacro %}
+
+        {% macro render_select_dog(list, selected_id) %}
+            <select name="dogs">
+                {% set n = len(list) %}
+                {% for i in range(n) %}
+                    {% set id_d = list.loc[i, "id_dog"] %}
+                    {% if id_d == selected_id %}
+                        <option selected value={{id_d}}>
+                    {% else %}
+                        <option value="{{id_d}}">
+                    {% endif %}
+                    {{list.loc[i, "name_dog"]}}
+                    </option>
+                {% endfor %}
+            </select>
+        {% endmacro %}
+
+{% macro render_list_spec(list, selected_id) %}
+            <select name="name_spec">
+                {% set n = len(list) %}
+                {% for i in range(n) %}
+                    {% set id_s = list.loc[i, "id_specialization"] %}
+                    {% if id_s == selected_id %}
+                        <option selected value={{id_s}}>
+                    {% else %}
+                        <option value="{{id_s}}">
+                    {% endif %}
+                    {{list.loc[i, "name_specialization"]}}
+                    </option>
+                {% endfor %}
+            </select>
+        {% endmacro %}
+
+{% block navbar %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+                <a class="nav-link active" href={{url_for('index')}}> Расписание по дням </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{url_for('appointment')}}"> Расписание по врачам </a>
+            </li>
+<!--            <li>-->
+<!--                <a class="nav-link" href="{{url_for('index')}}"> Подтвердить выбор специалиста </a>-->
+<!--            </li>-->
+            <li>
+                <a class="nav-link" href="{{url_for('info_user')}}"> Пользователь </a>
+            </li>
+        </ul>
+    </div>
+</nav>
+{% endblock %}
+
+
+{% block content %}
+<div class="block">
+    <p>
+        <form action="" method ="get">
+            <p>
+                Список специалистов:
+                {{render_list_spec(specialization_list, spec_id)}}
+            </p>
+            <p>
+                Пользователь:
+                {{render_select_us(users_list, user_id)}}
+            </p>
+            <p>
+                Собака:
+                {{render_select_dog(dogs_list, dog_id)}}
+            </p>
+            <input type="submit" value="Выбрать">
+        </form>
+    </p>
+    <p>
+        <form action="{{url_for("view")}}" method="get">
+            <input type="submit" value="Посмотреть записи">
+        </form>
+    </p>
+    <p>
+        <form action="{{url_for("user_add")}}" method="get">
+            <input type="submit" value="Новый пользователь">
+        </form>
+        <form action="{{url_for("dog_add")}}" method="get">
+            <input type="submit" value="Новая собака">
+        </form>
+    </p>
+    <form action="{{url_for("index")}}" method="get">
+        {{ render_table("Свободные записи", select_time) }}
+    </form>
+</div>
+{% endblock %}
+
+{% block script %}
+{% endblock %}

@@ -1,0 +1,96 @@
+{% extends "pattern.html" %}
+{% block title %}
+Список
+{% endblock %}
+
+{% macro render_list_spec(list, selected_id) %}
+            <select name="name_spec">
+                {% set n = len(list) %}
+                {% for i in range(n) %}
+                    {% set id_s = list.loc[i, "id_specialization"] %}
+                    {% if id_s == selected_id %}
+                        <option selected value={{id_s}}>
+                    {% else %}
+                        <option value="{{id_s}}">
+                    {% endif %}
+                    {{list.loc[i, "name_specialization"]}}
+                    </option>
+                {% endfor %}
+            </select>
+        {% endmacro %}
+
+{% macro render_select_br(list, selected_id) %}
+            <select name="breed_dog">
+                {% set n = len(list) %}
+                {% for i in range(n) %}
+                    {% set id_u = list.loc[i, "id_breed_of_dog"] %}
+                    {% if id_u == selected_id %}
+                        <option selected value={{id_u}}>
+                    {% else %}
+                        <option value="{{id_u}}">
+                    {% endif %}
+                    {{list.loc[i, "name_breed_of_dog"]}}</option>
+                {% endfor %}
+            </select>
+        {% endmacro %}
+
+{% macro render_select_us(list, selected_id) %}
+            <select name="users">
+                {% set n = len(list) %}
+                {% for i in range(n) %}
+                    {% set id_u = list.loc[i, "id_dog_owner"] %}
+                    {% if id_u == selected_id %}
+                        <option selected value={{id_u}}>
+                    {% else %}
+                        <option value="{{id_u}}">
+                    {% endif %}
+                    {{list.loc[i, "FIO"]}}</option>
+                {% endfor %}
+            </select>
+        {% endmacro %}
+
+{% block navbar %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+                <a class="nav-link active" href={{url_for('index')}}> Расписание по дням </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{url_for('appointment')}}"> Расписание по врачам </a>
+            </li>
+<!--            <li>-->
+<!--                <a class="nav-link" href="{{url_for('index')}}"> Подтвердить выбор специалиста </a>-->
+<!--            </li>-->
+            <li>
+                <a class="nav-link" href="{{url_for('info_user')}}"> Пользователь </a>
+            </li>
+        </ul>
+    </div>
+</nav>
+{% endblock %}
+
+
+{% block content %}
+<div class="block">
+    <p>
+        <form action="{{url_for("index")}}" method="get">
+            <input type="submit" value="Назад">
+        </form>
+    </p>
+    <p>
+        <p>Хотите добавить еще и собаку</p>
+        <form action="{{url_for("dog_add")}}" method="get">
+            <p>Хозяин: {{render_select_us(users_list, user_id)}}</p>
+            <p>Имя: <input name="user_name" type="text" value={{us_name}}></p>
+            <p>Возраст: <input name="dog_age" type="text" value={{us_last}}></p>
+            <p>Порода: {{render_select_br(breed_of_dog_list, breed_id)}}</p>
+            <input type="submit" value="Добавить" name="insert_dog">
+        </form>
+    <p>{{output_results}}</p>
+    </p>
+</div>
+{% endblock %}
+
+{% block script %}
+{% endblock %}
